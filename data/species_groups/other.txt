@@ -1,0 +1,8 @@
+other_songbird
+other_raptor
+other_waterfowl
+other_waterbird
+other_shorebird
+other_upland_gamebird
+other_bat
+unknown

@@ -1,0 +1,12 @@
+Songbird
+Woodpecker
+Raptor
+Waterfowl
+Waterbird
+Shorebird
+Upland Gamebird
+Pigeons/Doves
+Gulls/Terns
+Cranes/Rails
+Bat
+Other

@@ -1,0 +1,6 @@
+ring_billed_gull
+franklins_gull
+black_tern
+common_tern
+california_gull
+foresters_tern

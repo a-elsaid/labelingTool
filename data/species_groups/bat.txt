@@ -1,0 +1,6 @@
+eastern_red_bat
+hoary_bat
+silver_haired_bat
+little_brown_bat
+big_brown_bat
+northern_long_eared_bat
