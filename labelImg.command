@@ -423,8 +423,8 @@ class MainWindow(QMainWindow, WindowMixin):
 
         # Store actions for further handling.
         self.actions = struct(save=save, saveAs=saveAs, setGrid=setGrid, setCell=setCell, open=open, close=close, resetAll = resetAll,
-                              lineColor=color1, create=create, delete=delete, edit=edit, copy=copy,
-                              createMode=createMode, editMode=editMode, advancedMode=advancedMode,
+                              lineColor=color1, create=create, delete=delete, copy=copy,
+                              createMode=createMode, advancedMode=advancedMode,
                               shapeLineColor=shapeLineColor, shapeFillColor=shapeFillColor,
                               zoom=zoom, zoomIn=zoomIn, zoomOut=zoomOut, zoomOrg=zoomOrg,
                               fitWindow=fitWindow, fitWidth=fitWidth,
@@ -432,13 +432,13 @@ class MainWindow(QMainWindow, WindowMixin):
                               fileMenuActions=(
                                   open, opendir, save, saveAs, close, resetAll, quit),
                               beginner=(), advanced=(),
-                              editMenu=(edit, copy, delete, setGrid, setCell,
+                              editMenu=(copy, delete, setGrid, setCell,
                                         None, color1, self.drawSquaresOption),
-                              beginnerContext=(create, edit, delete),
-                              advancedContext=(createMode, editMode, edit,
+                              beginnerContext=(create, delete),
+                              advancedContext=(createMode,
                                                delete, shapeLineColor, shapeFillColor),
                               onLoadActive=(
-                                  close, create, createMode, editMode),
+                                  close, create, createMode),
                               onShapesPresent=(saveAs, hideAll, showAll))
         self.menus = struct(
             file=self.menu('&File'),
@@ -601,8 +601,14 @@ class MainWindow(QMainWindow, WindowMixin):
 
         self.saveLabels(os.path.join(ustr(self.defaultSaveDir), '{}.xml'.format(self.filePath[:-4])))
         self.zoom_value = self.zoomWidget.value()
+        _h_bar = self.scrollBars[Qt.Horizontal].value()
+        _v_bar = self.scrollBars[Qt.Vertical].value()
+        h_bar = self.scrollBars[Qt.Horizontal]
+        v_bar = self.scrollBars[Qt.Vertical]
         self.loadFile(self.filePath)
         self.setZoom(self.zoom_value)
+        h_bar.setValue(_h_bar)
+        v_bar.setValue(_v_bar)
 
 
     def use_grid( self ):
@@ -616,8 +622,14 @@ class MainWindow(QMainWindow, WindowMixin):
 
         self.saveLabels(os.path.join(ustr(self.defaultSaveDir), '{}.xml'.format(self.filePath[:-4])))
         self.zoom_value = self.zoomWidget.value()
+        _h_bar = self.scrollBars[Qt.Horizontal].value()
+        _v_bar = self.scrollBars[Qt.Vertical].value()
+        h_bar = self.scrollBars[Qt.Horizontal]
+        v_bar = self.scrollBars[Qt.Vertical]
         self.loadFile(self.filePath)
         self.setZoom(self.zoom_value)
+        h_bar.setValue(_h_bar)
+        v_bar.setValue(_v_bar)
 
 
     def noShapes(self):
@@ -734,7 +746,7 @@ class MainWindow(QMainWindow, WindowMixin):
 
     def toggleDrawingSensitive(self, drawing=True):
         """In the middle of drawing, toggling between modes should be disabled."""
-        self.actions.editMode.setEnabled(not drawing)
+        # self.actions.editMode.setEnabled(not drawing)
         if not drawing and self.beginner():
             # Cancel creation.
             print('Cancel creation.')
@@ -835,7 +847,7 @@ class MainWindow(QMainWindow, WindowMixin):
                 self.labelList.clearSelection()
         self.actions.delete.setEnabled(selected)
         self.actions.copy.setEnabled(selected)
-        self.actions.edit.setEnabled(selected)
+        # self.actions.edit.setEnabled(selected)
         self.actions.shapeLineColor.setEnabled(selected)
         self.actions.shapeFillColor.setEnabled(selected)
 
@@ -912,6 +924,7 @@ class MainWindow(QMainWindow, WindowMixin):
                 }
 
         damages = list()
+
         for shape in shapes[:]:
             locs = []
             locs.append({
@@ -923,7 +936,7 @@ class MainWindow(QMainWindow, WindowMixin):
                              "y": str(shape.points[2].y()/QImage.size(self.image).height())
                             })
 
-            damages.append({'src'       : (path[0].split("/")[-1][:-4]),
+            damages.append({'src'       : (path.split("/")[-1][:-4]),
                             'type'      : 'rec',
                             'location'  : locs,
                             'group'     : shape.group,
@@ -935,7 +948,7 @@ class MainWindow(QMainWindow, WindowMixin):
 
         dump = {
                 'meta'   : meta,
-                'damages': damages
+                'carcasses': damages
         }
 
         string = json.dumps(dump, indent=4)
@@ -1394,6 +1407,7 @@ class MainWindow(QMainWindow, WindowMixin):
         if not self.mayContinue():
             return
 
+
         defaultOpenDirPath = dirpath if dirpath else '.'
         if self.lastOpenDir and os.path.exists(self.lastOpenDir):
             defaultOpenDirPath = self.lastOpenDir
@@ -1407,6 +1421,11 @@ class MainWindow(QMainWindow, WindowMixin):
             targetDirPath = ustr(defaultOpenDirPath)
 
         self.importDirImages(targetDirPath)
+
+
+        self.defaultSaveDir = targetDirPath
+
+
 
     def importDirImages(self, dirpath):
         if not self.mayContinue() or not dirpath:

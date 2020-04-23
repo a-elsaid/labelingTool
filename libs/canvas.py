@@ -11,6 +11,7 @@ except ImportError:
 
 from libs.shape import Shape
 from libs.utils import distance
+from convert_to_lat_lon import imgToLatLon
 
 CURSOR_DEFAULT = Qt.ArrowCursor
 CURSOR_POINT = Qt.PointingHandCursor
@@ -108,8 +109,14 @@ class Canvas(QWidget):
         # Update coordinates in status bar if image is opened
         window = self.parent().window()
         if window.filePath is not None:
+            lat='-'; lon = '-'
+            try:
+                LatLon = imgToLatLon(window.filePath)
+                lat, lon = LatLon.convert([pos.x(), pos.y()])
+            except:
+                print ("ERROR LOADING LAT LON")
             self.parent().window().labelCoordinates.setText(
-                'X: %d; Y: %d' % (pos.x(), pos.y()))
+                'X: {:d}; Y: {:d} -*- Lat: {}, Lon: {}'.format(int(pos.x()), int(pos.y()), lat, lon))
 
         # Polygon drawing.
         if self.drawing():
