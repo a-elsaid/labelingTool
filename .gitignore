@@ -133,5 +133,6 @@ dmypy.json
 README.rst.bck
 bck1labelImg.command
 JPG/*
+JPG
 wildlife_test_pix/*
 TEST_JPG/*
