@@ -1171,7 +1171,21 @@ class MainWindow(QMainWindow, WindowMixin):
         if self.usingCellNumber:
             for i in range(x_units, width, x_units):
                 for j in range( y_units, height, y_units ):
-                    cv.putText(cvImg, "{}{}".format(string.ascii_uppercase[int(i/x_units)-1], int(j/y_units)), (i-100, j-85), cv.FONT_HERSHEY_SIMPLEX, 0.65, (36,255,12), 2)
+                    x = int(i/x_units)-1
+                    # if 26 > x:
+                    # #     X = string.ascii_uppercase[int(i/x_units)-1]
+                    # # elif 25 < x < 51:
+                    # #     print (len(string.ascii_uppercase))
+                    # #     print ((int(i/x_units)-2)%25)
+                    # #     print (int(i/x_units)-2)
+                    # #     print (int(i/x_units)-2-25)
+                    # #     print (string.ascii_uppercase[(int(i/x_units)-2)%25])
+                    # #     print (string.ascii_uppercase[int(i/x_units)-2-25])
+                    # #     print("______")
+                    # #     X = "{}{}".format(string.ascii_uppercase[(int(i/x_units)-1)%25], string.ascii_uppercase[int(i/x_units)-1-((int(i/x_units)-1)%25)])
+                    # # elif 50 < x:
+                    # #     X = "{}{}{}".format(string.ascii_uppercase[(int(i/x_units)-1)%50], string.ascii_uppercase[(int(i/x_units)-1)%25], string.ascii_uppercase[int(i/x_units)-1-((int(i/x_units)-1)%25)])
+                    cv.putText(cvImg, "{}-{}".format(int(j/x_units), int(j/y_units)), (i-100, j-85), cv.FONT_HERSHEY_SIMPLEX, 0.65, (36,255,12), 2)
         bytesPerLine = 3 * width
         qImg = QImage(cvImg.data, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
 
