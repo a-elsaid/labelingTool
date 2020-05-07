@@ -115,6 +115,7 @@ class MainWindow(QMainWindow, WindowMixin):
         self.labelHist = []
         self.objectConditions = []
         self.speciesGroups = []
+        self.objectSources = []
         self.lastOpenDir = None
 
 
@@ -137,6 +138,11 @@ class MainWindow(QMainWindow, WindowMixin):
 
         # Load predefined classes to the list
         self.loadPredefinedClasses(defaultPrefdefClassFile)
+
+
+
+        # Load predefined sources to the list
+        self.loadPredefinedSources('./data/sources.txt')
 
 
 
@@ -227,9 +233,11 @@ class MainWindow(QMainWindow, WindowMixin):
 
         self.source_label = QLabel("Source", self)
         self.source_comboBox = QComboBox(self)
-        self.source_comboBox.addItem("hand_labled")
-        self.source_comboBox.addItem("outside_data_source")
-        self.source_comboBox.addItem("specific_data_source")
+        for i in self.objectSources:
+            self.source_comboBox.addItem(i)
+        # self.source_comboBox.addItem("hand_labled")
+        # self.source_comboBox.addItem("outside_data_source")
+        # self.source_comboBox.addItem("specific_data_source")
         # extra_anno_listLayout.addWidget(self.source_label)
         # extra_anno_listLayout.addWidget(self.source_comboBox)
 
@@ -1670,6 +1678,16 @@ class MainWindow(QMainWindow, WindowMixin):
                         self.labelHist = [line]
                     else:
                         self.labelHist.append(line)
+
+    def loadPredefinedSources(self, predefClassesFile):
+        if os.path.exists(predefClassesFile) is True:
+            with codecs.open(predefClassesFile, 'r', 'utf8') as f:
+                for line in f:
+                    line = line.strip()
+                    if self.objectSources is None:
+                        self.objectSources = [line]
+                    else:
+                        self.objectSources.append(line)
 
     def loadPredefinedConditions(self, predefClassesFile):
         if os.path.exists(predefClassesFile) is True:
